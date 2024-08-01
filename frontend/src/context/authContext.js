@@ -18,27 +18,19 @@ export const AuthProvider = ({ children }) => {
           localStorage.removeItem("token");
         }
       } catch (err) {
-        console.log("Error decoding token:", err);
         localStorage.removeItem("token");
       }
     }
   }, []);
 
-  useEffect(() => {
-    console.log("Is user logged in?", isLoggedIn);
-  }, [isLoggedIn]);
-
   const login = (token) => {
     localStorage.setItem("token", token);
-    console.log("Token after sign-in:", localStorage.getItem("token"));
     setIsLoggedIn(true);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    console.log("User signed out.");
-    console.log("Token after sign-out:", localStorage.getItem("token"));
   };
 
   return (

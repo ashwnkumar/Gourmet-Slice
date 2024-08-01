@@ -12,7 +12,6 @@ const verifyToken = require("./authMiddleware");
 require("dotenv").config();
 
 const uri = process.env.MONGODB_URI;
-console.log(uri);
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -38,7 +37,6 @@ app.post("/sign-up", async (req, res) => {
     await user.save();
     res.status(201).json({ msg: "User registered successfully" });
   } catch (err) {
-    console.error(err.message);
     res.status(500).send("Server error");
   }
 });
@@ -50,13 +48,11 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      console.log("User not found:", email);
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      console.log("Password mismatch for user:", email);
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
@@ -68,7 +64,6 @@ app.post("/login", async (req, res) => {
 
     res.status(200).json({ msg: "Login successful", token });
   } catch (err) {
-    console.error(err.message);
     res.status(500).send("Server error");
   }
 });
@@ -109,20 +104,16 @@ app.post("/admin-login", async (req, res) => {
 
     res.status(200).json({ msg: "Login successful", token });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 });
 
 // Route for adding products
 app.post("/api/products", async (req, res) => {
-  console.log("Request body:", req.body); // Log the request body
-
   const { name, description, price, category } = req.body;
 
   // Basic validation
   if (!name || !description || !price || !category) {
-    console.error("Validation error: All fields are required."); // Log validation error
     return res.status(400).json({ msg: "All fields are required." });
   }
 
@@ -133,7 +124,6 @@ app.post("/api/products", async (req, res) => {
     await newProduct.save();
     res.status(201).json({ msg: "Product added successfully!" });
   } catch (err) {
-    console.error("Error adding product:", err);
     res.status(500).json({ msg: "Error adding product", error: err.message });
   }
 });
@@ -150,7 +140,6 @@ app.delete("/api/products/:id", async (req, res) => {
 
     res.status(200).json({ msg: "Product removed successfully!" });
   } catch (error) {
-    console.error("Error removing product:", error);
     res
       .status(500)
       .json({ msg: "Error removing product", error: error.message });
@@ -163,7 +152,6 @@ app.get("/api/products", async (req, res) => {
     const products = await Product.find();
     res.status(200).json(products);
   } catch (error) {
-    console.error("Error fetching products:", error.message);
     res
       .status(500)
       .json({ msg: "Error fetching products", error: error.message });

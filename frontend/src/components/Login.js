@@ -19,20 +19,17 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting login with data:", formData);
     try {
       const res = await axios.post("http://localhost:5000/login", formData);
       setMessage(res.data.msg);
 
       const token = res.data.token;
-      console.log("Token received:", token);
 
       login(token);
 
       navigate("/");
     } catch (err) {
       if (err.response) {
-        console.log("Error response:", err.response);
         if (err.response.data.msg === "Invalid credentials") {
           setMessage(
             "Invalid credentials, please check your email and password."
