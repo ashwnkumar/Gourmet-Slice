@@ -9,13 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./authMiddleware");
-<<<<<<< HEAD
-const multer = require("multer");
-const path = require("path");
-=======
->>>>>>> origin/main
+require("dotenv").config();
 
-const uri = "mongodb+srv://admin:admin@cluster0.jvm5wud.mongodb.net/";
+const uri = process.env.MONGODB_URI;
+console.log(uri);
+
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB Atlas"))
@@ -36,16 +34,7 @@ app.post("/sign-up", async (req, res) => {
     }
 
     // Create new user
-    user = new User({
-      name,
-      email,
-<<<<<<< HEAD
-      password,
-=======
-      password, // No hashing
->>>>>>> origin/main
-    });
-
+    user = new User({ name, email, password });
     await user.save();
     res.status(201).json({ msg: "User registered successfully" });
   } catch (err) {
@@ -73,7 +62,7 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.JWT_SECRET || "your_jwt_secret",
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
@@ -110,9 +99,13 @@ app.post("/admin-login", async (req, res) => {
     }
 
     // Generate a token
-    const token = jwt.sign({ id: admin._id, email: admin.email }, JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: admin._id, email: admin.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(200).json({ msg: "Login successful", token });
   } catch (err) {
@@ -121,7 +114,6 @@ app.post("/admin-login", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // Route for adding products
 app.post("/api/products", async (req, res) => {
   console.log("Request body:", req.body); // Log the request body
@@ -135,12 +127,7 @@ app.post("/api/products", async (req, res) => {
   }
 
   // Proceed with adding the product to the database...
-  const newProduct = new Product({
-    name,
-    description,
-    price,
-    category,
-  });
+  const newProduct = new Product({ name, description, price, category });
 
   try {
     await newProduct.save();
@@ -150,6 +137,7 @@ app.post("/api/products", async (req, res) => {
     res.status(500).json({ msg: "Error adding product", error: err.message });
   }
 });
+
 // Delete a product by ID
 app.delete("/api/products/:id", async (req, res) => {
   try {
@@ -163,26 +151,9 @@ app.delete("/api/products/:id", async (req, res) => {
     res.status(200).json({ msg: "Product removed successfully!" });
   } catch (error) {
     console.error("Error removing product:", error);
-    res.status(500).json({ msg: "Error removing product", error: error });
-=======
-// Add a new product
-app.post("/api/products", async (req, res) => {
-  try {
-    console.log("Received data:", req.body); // Log received data
-    const { name, description, price, image } = req.body;
-
-    // Basic validation
-    if (!name || !description || !price || !image) {
-      return res.status(400).json({ msg: "All fields are required." });
-    }
-
-    const newProduct = new Product({ name, description, price, image });
-    await newProduct.save();
-    res.status(201).json({ msg: "Product added successfully!" });
-  } catch (error) {
-    console.error("Error adding product:", error); // Log the entire error
-    res.status(500).json({ msg: "Error adding product", error: error }); // Return the error object
->>>>>>> origin/main
+    res
+      .status(500)
+      .json({ msg: "Error removing product", error: error.message });
   }
 });
 
@@ -192,11 +163,7 @@ app.get("/api/products", async (req, res) => {
     const products = await Product.find();
     res.status(200).json(products);
   } catch (error) {
-<<<<<<< HEAD
     console.error("Error fetching products:", error.message);
-=======
-    console.error("Error fetching products:", error.message); // Log error message
->>>>>>> origin/main
     res
       .status(500)
       .json({ msg: "Error fetching products", error: error.message });
@@ -208,7 +175,7 @@ app.get("/protected", verifyToken, (req, res) => {
   res.status(200).json({ msg: "This is a protected route", user: req.user });
 });
 
-//Start the server
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}.`);
 });

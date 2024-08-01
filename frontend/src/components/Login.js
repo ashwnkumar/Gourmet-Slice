@@ -1,12 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-<<<<<<< HEAD
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-=======
-import { useNavigate, Link } from "react-router-dom"; // Import Link
-import { AuthContext } from "../context/authContext"; // Ensure the path is correct
->>>>>>> origin/main
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -30,14 +25,8 @@ function Login() {
       setMessage(res.data.msg);
 
       const token = res.data.token;
-<<<<<<< HEAD
       console.log("Token received:", token);
 
-=======
-      console.log("Token received:", token); // Log the token received from server
-
-      // Save the token to localStorage
->>>>>>> origin/main
       login(token);
 
       navigate("/");

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-<<<<<<< HEAD
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -24,26 +23,6 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-=======
-const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-});
->>>>>>> origin/main
 
 const Product = mongoose.model("Product", productSchema);
 
