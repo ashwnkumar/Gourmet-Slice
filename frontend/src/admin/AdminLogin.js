@@ -1,7 +1,11 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import { AuthContext } from "../context/authContext";
+=======
+import { AuthContext } from "../context/authContext"; // Ensure the path is correct
+>>>>>>> origin/main
 
 function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -25,6 +29,7 @@ function AdminLogin() {
       setMessage(res.data.msg);
 
       const token = res.data.token;
+<<<<<<< HEAD
       console.log("Token received:", token);
 
       login(token);
@@ -33,6 +38,18 @@ function AdminLogin() {
         navigate("/admin");
       } else {
         navigate("/");
+=======
+      console.log("Token received:", token); // Log the token received from server
+
+      // Save the token to localStorage
+      login(token);
+
+      // Check if the email is an admin email
+      if (formData.email.endsWith("@admins.gourmetslice.in")) {
+        navigate("/admin"); // Redirect to the admin dashboard
+      } else {
+        navigate("/"); // Redirect to the home page
+>>>>>>> origin/main
       }
     } catch (err) {
       if (err.response) {

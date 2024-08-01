@@ -1,24 +1,39 @@
 import React, { useContext, useEffect, useState } from "react";
+<<<<<<< HEAD
 import { AuthContext } from "../context/authContext";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const AdminDashboard = () => {
+=======
+import { AuthContext } from "../context/authContext"; // Ensure the path is correct
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"; // Import axios to make HTTP requests
+
+function AdminDashboard() {
+>>>>>>> origin/main
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
+<<<<<<< HEAD
     category: "Veg",
   });
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState([]);
+=======
+    image: "",
+  });
+  const [message, setMessage] = useState("");
+>>>>>>> origin/main
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/admin-login");
+<<<<<<< HEAD
     } else {
       fetchProducts();
     }
@@ -33,19 +48,31 @@ const AdminDashboard = () => {
     }
   };
 
+=======
+    }
+  }, [navigate]);
+
+>>>>>>> origin/main
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
   const handleChange = (e) => {
+<<<<<<< HEAD
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+=======
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+>>>>>>> origin/main
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
     try {
       const res = await axios.post(
         "http://localhost:5000/api/products",
@@ -56,14 +83,20 @@ const AdminDashboard = () => {
         name: "",
         description: "",
         price: "",
+<<<<<<< HEAD
         category: "Veg",
       });
       fetchProducts();
+=======
+        image: "",
+      }); // Clear the form
+>>>>>>> origin/main
     } catch (err) {
       setMessage("Error adding product: " + err.response.data.msg);
     }
   };
 
+<<<<<<< HEAD
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
@@ -76,6 +109,8 @@ const AdminDashboard = () => {
     }
   };
 
+=======
+>>>>>>> origin/main
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Admin Dashboard</h2>
@@ -123,6 +158,7 @@ const AdminDashboard = () => {
           />
         </div>
         <div className="mb-3">
+<<<<<<< HEAD
           <label htmlFor="category" className="form-label">
             Category
           </label>
@@ -138,12 +174,27 @@ const AdminDashboard = () => {
             <option value="Non-Veg">Non-Veg</option>
             <option value="Beverage">Beverage</option>
           </select>
+=======
+          <label htmlFor="image" className="form-label">
+            Image URL
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="image"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            required
+          />
+>>>>>>> origin/main
         </div>
         <button type="submit" className="btn btn-primary">
           Add Product
         </button>
       </form>
       {message && <p>{message}</p>}
+<<<<<<< HEAD
 
       {/* Display list of products */}
       <h3 className="text-center">Product List</h3>
@@ -172,12 +223,18 @@ const AdminDashboard = () => {
         <p>No products available.</p>
       )}
 
+=======
+>>>>>>> origin/main
       <button className="btn btn-danger" onClick={handleLogout}>
         Sign Out
       </button>
       <Link to="/order-food">Product Page</Link>
     </div>
   );
+<<<<<<< HEAD
 };
+=======
+}
+>>>>>>> origin/main
 
 export default AdminDashboard;

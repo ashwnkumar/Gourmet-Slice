@@ -1,5 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
+<<<<<<< HEAD
 import { jwtDecode } from "jwt-decode";
+=======
+import { jwtDecode } from "jwt-decode"; // Ensure the correct import
+>>>>>>> origin/main
 
 export const AuthContext = createContext();
 
@@ -38,7 +42,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     console.log("User signed out.");
+<<<<<<< HEAD
     console.log("Token after sign-out:", localStorage.getItem("token"));
+=======
+    console.log("Token after sign-out:", localStorage.getItem("token")); // Should be null
+>>>>>>> origin/main
   };
 
   return (

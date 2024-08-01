@@ -1,13 +1,23 @@
+<<<<<<< HEAD
+=======
+// src/components/Header.js
+>>>>>>> origin/main
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import logo from "../images/logo/logo.png";
+<<<<<<< HEAD
 import { useCart } from "../context/cartContext";
 
 const Header = () => {
   const { isLoggedIn, logout } = useContext(AuthContext);
   const { cart } = useCart();
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+=======
+
+const Header = () => {
+  const { isLoggedIn, logout } = useContext(AuthContext);
+>>>>>>> origin/main
 
   return (
     <header className="App-header bg-dark text-white p-3">
@@ -42,6 +52,7 @@ const Header = () => {
               </ul>
               <ul className="navbar-nav ms-auto">
                 {isLoggedIn ? (
+<<<<<<< HEAD
                   <>
                     <li className="nav-item">
                       <button className="btn btn-secondary" onClick={logout}>
@@ -54,6 +65,13 @@ const Header = () => {
                       </Link>
                     </li>
                   </>
+=======
+                  <li className="nav-item">
+                    <button className="btn btn-secondary" onClick={logout}>
+                      Sign Out
+                    </button>
+                  </li>
+>>>>>>> origin/main
                 ) : (
                   <>
                     <li className="nav-item login">
@@ -66,11 +84,14 @@ const Header = () => {
                         Sign up
                       </Link>
                     </li>
+<<<<<<< HEAD
                     <li className="nav-item">
                       <Link to="/cart" className="nav-link">
                         Cart ({totalItems})
                       </Link>
                     </li>
+=======
+>>>>>>> origin/main
                   </>
                 )}
               </ul>

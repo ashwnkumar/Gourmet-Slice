@@ -9,8 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./authMiddleware");
+<<<<<<< HEAD
 const multer = require("multer");
 const path = require("path");
+=======
+>>>>>>> origin/main
 
 const uri = "mongodb+srv://admin:admin@cluster0.jvm5wud.mongodb.net/";
 mongoose
@@ -36,7 +39,11 @@ app.post("/sign-up", async (req, res) => {
     user = new User({
       name,
       email,
+<<<<<<< HEAD
       password,
+=======
+      password, // No hashing
+>>>>>>> origin/main
     });
 
     await user.save();
@@ -114,6 +121,7 @@ app.post("/admin-login", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Route for adding products
 app.post("/api/products", async (req, res) => {
   console.log("Request body:", req.body); // Log the request body
@@ -156,6 +164,25 @@ app.delete("/api/products/:id", async (req, res) => {
   } catch (error) {
     console.error("Error removing product:", error);
     res.status(500).json({ msg: "Error removing product", error: error });
+=======
+// Add a new product
+app.post("/api/products", async (req, res) => {
+  try {
+    console.log("Received data:", req.body); // Log received data
+    const { name, description, price, image } = req.body;
+
+    // Basic validation
+    if (!name || !description || !price || !image) {
+      return res.status(400).json({ msg: "All fields are required." });
+    }
+
+    const newProduct = new Product({ name, description, price, image });
+    await newProduct.save();
+    res.status(201).json({ msg: "Product added successfully!" });
+  } catch (error) {
+    console.error("Error adding product:", error); // Log the entire error
+    res.status(500).json({ msg: "Error adding product", error: error }); // Return the error object
+>>>>>>> origin/main
   }
 });
 
@@ -165,7 +192,11 @@ app.get("/api/products", async (req, res) => {
     const products = await Product.find();
     res.status(200).json(products);
   } catch (error) {
+<<<<<<< HEAD
     console.error("Error fetching products:", error.message);
+=======
+    console.error("Error fetching products:", error.message); // Log error message
+>>>>>>> origin/main
     res
       .status(500)
       .json({ msg: "Error fetching products", error: error.message });
