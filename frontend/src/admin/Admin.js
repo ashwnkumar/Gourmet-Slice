@@ -3,7 +3,7 @@ import { AuthContext } from "../context/authContext";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const AdminDashboard = () => {
+const Admin = () => {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -14,6 +14,9 @@ const AdminDashboard = () => {
   });
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]); // State for users
+  const [loadingUsers, setLoadingUsers] = useState(true); // Loading state for users
+  const [orders, setOrders] = useState([]); // State for orders
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,6 +24,7 @@ const AdminDashboard = () => {
       navigate("/admin-login");
     } else {
       fetchProducts();
+      fetchUsersAndOrders(); // Fetch users and their orders
     }
   }, [navigate]);
 
@@ -30,6 +34,33 @@ const AdminDashboard = () => {
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+    }
+  };
+
+  const fetchUsersAndOrders = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const usersResponse = await axios.get("http://localhost:5000/api/users", {
+        headers: { Authorization: `Bearer ${token}` }, // Include the token
+      });
+      const ordersResponse = await axios.get(
+        "http://localhost:5000/api/orders/all",
+        {
+          headers: { Authorization: `Bearer ${token}` }, // Include the token
+        }
+      );
+      // Log fetched users and orders for debugging
+      console.log("Fetched Users:", usersResponse.data);
+      console.log("Fetched Orders:", ordersResponse.data);
+
+      setUsers(usersResponse.data);
+      setOrders(ordersResponse.data);
+    } catch (error) {
+      console.error("Error fetching users or orders:", error);
+    } finally {
+      setLoadingUsers(false);
     }
   };
 
@@ -171,6 +202,32 @@ const AdminDashboard = () => {
         <p>No products available.</p>
       )}
 
+      {/* Display list of users and their orders */}
+      <h3 className="text-center">User List and Their Orders</h3>
+      {loadingUsers ? (
+        <p>Loading users...</p>
+      ) : (
+        <ul className="list-group mb-4">
+          {users.map((user) => (
+            <li key={user._id} className="list-group-item">
+              <h5>{user.email}</h5>
+              <h6>Orders:</h6>
+              {orders
+                .filter((order) => order.user._id === user._id) // Adjusted to access order.user._id
+                .map((order) => (
+                  <div key={order._id}>
+                    <p>Order ID: {order._id}</p>
+                    <p>Status: {order.status}</p>
+                    <p>Total: ${order.total.toFixed(2)}</p>
+                  </div>
+                ))}
+              {orders.filter((order) => order.user._id === user._id).length ===
+                0 && <p>No orders placed.</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <button className="btn btn-danger" onClick={handleLogout}>
         Sign Out
       </button>
@@ -179,4 +236,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Admin;

@@ -4,15 +4,17 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 const Admin = require("./models/Admin");
+const Order = require("./models/Orders");
 const Product = require("./models/Product");
-const app = express();
-const PORT = process.env.PORT || 5000;
-const jwt = require("jsonwebtoken");
 const verifyToken = require("./authMiddleware");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const uri = process.env.MONGODB_URI;
+const app = express();
+const PORT = process.env.PORT || 5000;
 
+// MongoDB Connection
+const uri = process.env.MONGODB_URI;
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB Atlas"))
@@ -88,7 +90,7 @@ app.post("/admin-login", async (req, res) => {
     }
 
     // Compare the password (assuming it's hashed)
-    const isMatch = await bcrypt.compare(password, admin.password);
+    const isMatch = await admin.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ msg: "Invalid credentials" });
     }
@@ -117,7 +119,6 @@ app.post("/api/products", async (req, res) => {
     return res.status(400).json({ msg: "All fields are required." });
   }
 
-  // Proceed with adding the product to the database...
   const newProduct = new Product({ name, description, price, category });
 
   try {
@@ -155,6 +156,83 @@ app.get("/api/products", async (req, res) => {
     res
       .status(500)
       .json({ msg: "Error fetching products", error: error.message });
+  }
+});
+
+// Order creation
+app.post("/api/orders", verifyToken, async (req, res) => {
+  const { items, address, paymentMethod, total } = req.body;
+
+  // Validate incoming data
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ msg: "Items are required." });
+  }
+  if (!address) {
+    return res.status(400).json({ msg: "Address is required." });
+  }
+  if (!paymentMethod) {
+    return res.status(400).json({ msg: "Payment method is required." });
+  }
+  if (total === undefined || total <= 0) {
+    return res
+      .status(400)
+      .json({ msg: "Total amount is required and must be greater than 0." });
+  }
+
+  try {
+    const newOrder = new Order({
+      user: req.user.id,
+      items,
+      address,
+      paymentMethod,
+      total,
+    });
+
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    console.error("Error creating order:", error);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// Get orders for the logged-in user
+app.get("/api/orders", verifyToken, async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user.id })
+      .populate("items.product") // Populate product details in each order
+      .exec();
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// Get all users (Admin route)
+app.get("/api/users", verifyToken, async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // Exclude password
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// Get all orders (Admin route)
+app.get("/api/orders/all", verifyToken, async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("items.product") // Populate product details in each order
+      .populate("user") // Populate user details for each order
+      .exec();
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    res.status(500).json({ msg: "Server error" });
   }
 });
 

@@ -1,3 +1,4 @@
+// index.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ReactDOM from "react-dom/client";
@@ -11,6 +12,9 @@ import AdminDashboard from "./admin/Admin";
 import OrderFood from "./components/OrderFood";
 import { CartProvider } from "./context/cartContext";
 import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import OrderSuccess from "./components/OrderSuccess";
+import MyOrders from "./components/MyOrders";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -26,6 +30,9 @@ root.render(
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/order-food" element={<OrderFood />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/my-orders" element={<MyOrders />} />
           </Routes>
         </Router>
       </AuthProvider>

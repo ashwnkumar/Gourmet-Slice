@@ -1,10 +1,13 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useCart } from "./cartContext";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { resetCart } = useCart();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -14,6 +17,7 @@ export const AuthProvider = ({ children }) => {
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp > currentTime) {
           setIsLoggedIn(true);
+          setUser({ token, email: decodedToken.email });
         } else {
           localStorage.removeItem("token");
         }
@@ -25,17 +29,23 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token) => {
     localStorage.setItem("token", token);
+    const decodedToken = jwtDecode(token);
     setIsLoggedIn(true);
+    setUser({ token, email: decodedToken.email });
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    resetCart();
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
