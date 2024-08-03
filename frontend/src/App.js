@@ -10,12 +10,17 @@ import ContactSection from "./components/Contact";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App bg-gray-100 min-h-screen flex flex-col">
       <Header />
-      <CarouselSection />
-      <HeroSection />
-      <AboutSection />
-      <ContactSection />
+      <main className="flex-grow">
+        <CarouselSection />
+        <HeroSection />
+        <AboutSection />
+        <ContactSection />
+      </main>
+      <footer className="bg-gray-800 text-white text-center py-4">
+        <p>© 2024 Gourmet Slice. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

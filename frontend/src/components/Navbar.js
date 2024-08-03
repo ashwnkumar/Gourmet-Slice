@@ -9,80 +9,105 @@ const NavigationBar = () => {
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container d-flex justify-content-between">
-        <ul className="navbar-nav mx-auto">
-          <li className="nav-item me-4">
-            {" "}
-            {/* Increased margin here */}
-            <Link className="nav-link" to="/">
+    <nav className="bg-red-600 shadow-lg w-full">
+      <div className="container mx-auto flex justify-between items-center px-6 py-4">
+        <div className="text-white text-3xl font-bold transition-transform transform hover:scale-105">
+          <Link to="/">Gourmet Slice</Link>
+        </div>
+        <ul className="hidden md:flex space-x-8">
+          <li>
+            <Link
+              className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+              to="/"
+            >
               Home
             </Link>
           </li>
-          <li className="nav-item me-4">
-            {" "}
-            {/* Increased margin here */}
-            <a className="nav-link" href="#about">
+          <li>
+            <a
+              className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+              href="#about"
+            >
               About
             </a>
           </li>
-          <li className="nav-item me-4">
-            {" "}
-            {/* Increased margin here */}
-            <a className="nav-link" href="#contact">
+          <li>
+            <a
+              className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+              href="#contact"
+            >
               Contact
             </a>
           </li>
-          {isLoggedIn && ( // Show My Orders link only if logged in
-            <li className="nav-item me-4">
-              {" "}
-              {/* Increased margin here */}
-              <Link className="nav-link" to="/my-orders">
+          {isLoggedIn && (
+            <li>
+              <Link
+                className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+                to="/my-orders"
+              >
                 My Orders
               </Link>
             </li>
           )}
         </ul>
-        <ul className="navbar-nav ms-auto">
+        <div className="flex items-center space-x-4">
           {isLoggedIn ? (
             <>
-              <li className="nav-item me-4">
-                {" "}
-                {/* Increased margin here */}
-                <button className="btn btn-secondary" onClick={logout}>
-                  Sign Out
-                </button>
-              </li>
-              <li className="nav-item">
-                <Link to="/cart" className="nav-link">
-                  Cart ({totalItems})
-                </Link>
-              </li>
+              <button
+                className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-400 transition duration-200 transform hover:scale-105 shadow-lg"
+                onClick={logout}
+              >
+                Sign Out
+              </button>
+              <Link
+                to="/cart"
+                className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+              >
+                Cart ({totalItems})
+              </Link>
             </>
           ) : (
             <>
-              <li className="nav-item me-4">
-                {" "}
-                {/* Increased margin here */}
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item me-4">
-                {" "}
-                {/* Increased margin here */}
-                <Link className="nav-link" to="/sign-up">
-                  Sign up
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/cart" className="nav-link">
-                  Cart ({totalItems})
-                </Link>
-              </li>
+              <Link
+                className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+                to="/login"
+              >
+                Login
+              </Link>
+              <Link
+                className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+                to="/sign-up"
+              >
+                Sign Up
+              </Link>
+              <Link
+                to="/cart"
+                className="text-white hover:text-yellow-300 transition duration-200 hover:scale-105"
+              >
+                Cart ({totalItems})
+              </Link>
             </>
           )}
-        </ul>
+        </div>
+        {/* Responsive Hamburger Menu (optional, needs implementation) */}
+        <div className="md:hidden">
+          <button className="text-white focus:outline-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-8 h-8"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </nav>
   );

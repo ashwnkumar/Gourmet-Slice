@@ -1,11 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/cartContext";
-import { useAuth } from "../context/authContext"; // Ensure the correct path to the useAuth file
+import { useAuth } from "../context/authContext";
 import NavigationBar from "./Navbar";
+import { FaShoppingCart, FaMinus, FaPlus } from "react-icons/fa";
 
 const Cart = () => {
-  const { isLoggedIn, logout } = useAuth(); // Use AuthContext to check if user is logged in
+  const { isLoggedIn } = useAuth();
   const { cart, removeFromCart, reduceQuantity, increaseQuantity } = useCart();
   const navigate = useNavigate();
 
@@ -17,19 +18,18 @@ const Cart = () => {
   const deliveryFee = 5.0;
   const totalPrice = subtotal + deliveryFee;
 
-  const handleLogout = () => {
-    logout(); // Call the logout function
-    navigate("/"); // Redirect to home page after logging out
-  };
-
   if (!isLoggedIn) {
     return (
       <>
         <NavigationBar />
-        <div className="container mt-5">
-          <h2 className="text-center mb-4">Your Cart</h2>
-          <div className="alert alert-warning text-center" role="alert">
-            You are not logged in. Please log in first.
+        <div className="bg-gradient-to-r from-blue-50 to-white min-h-screen py-10">
+          <div className="container mx-auto mt-5">
+            <h2 className="text-center mb-4 text-4xl font-bold text-gray-800">
+              Your Cart
+            </h2>
+            <div className="alert alert-warning text-center" role="alert">
+              You are not logged in. Please log in first.
+            </div>
           </div>
         </div>
       </>
@@ -39,107 +39,105 @@ const Cart = () => {
   return (
     <>
       <NavigationBar />
-      <div className="container mt-5">
-        <h2 className="text-center mb-4">Your Cart</h2>
-        {cart.length > 0 ? (
-          <>
-            <div className="table-responsive">
-              <table className="table table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">Image</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cart.map((item) => (
-                    <tr key={item._id} className="align-middle">
-                      <td>
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="img-fluid rounded"
-                          style={{ width: "100px", height: "auto" }}
-                        />
-                      </td>
-                      <td>{item.name}</td>
-                      <td>{item.description}</td>
-                      <td>${item.price.toFixed(2)}</td>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <button
-                            className="btn btn-outline-secondary me-2"
-                            onClick={() => reduceQuantity(item._id)}
-                            aria-label="Reduce quantity"
-                            title="Reduce quantity"
-                          >
-                            -
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button
-                            className="btn btn-outline-secondary ms-2"
-                            onClick={() => increaseQuantity(item._id)}
-                            aria-label="Increase quantity"
-                            title="Increase quantity"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-outline-danger"
-                          onClick={() => removeFromCart(item._id)}
-                          aria-label="Remove item"
-                          title="Remove item"
-                        >
-                          Remove
-                        </button>
-                      </td>
+      <div className="bg-gradient-to-r from-blue-50 to-white min-h-screen py-10">
+        <div className="container mx-auto mt-5">
+          <h2 className="text-center mb-4 text-4xl font-bold text-gray-800">
+            <FaShoppingCart className="inline-block mr-2 text-blue-600" />
+            Your Cart
+          </h2>
+          {cart.length > 0 ? (
+            <>
+              {/* Cart Details Section */}
+              <div className="table-responsive mb-8">
+                <table className="table table-hover w-full border border-gray-300 rounded-lg shadow-md">
+                  <thead className="bg-gray-200">
+                    <tr>
+                      <th scope="col">Image</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="text-center mt-4">
-              <h4>Order Summary</h4>
-              <div className="d-flex justify-content-center">
-                <table className="table table-borderless w-auto">
+                  </thead>
                   <tbody>
-                    <tr>
-                      <td>Subtotal:</td>
-                      <td>${subtotal.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td>Delivery Fee:</td>
-                      <td>${deliveryFee.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Total:</strong>
-                      </td>
-                      <td>
-                        <strong>${totalPrice.toFixed(2)}</strong>
-                      </td>
-                    </tr>
+                    {cart.map((item) => (
+                      <tr key={item._id} className="align-middle">
+                        <td>
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="img-fluid rounded"
+                            style={{ width: "100px", height: "auto" }}
+                          />
+                        </td>
+                        <td>{item.name}</td>
+                        <td>{item.description}</td>
+                        <td>${item.price.toFixed(2)}</td>
+                        <td>
+                          <div className="flex items-center">
+                            <button
+                              className="bg-gray-200 rounded-full p-2 mr-2 hover:bg-gray-300 transition duration-200"
+                              onClick={() => reduceQuantity(item._id)}
+                            >
+                              <FaMinus className="text-gray-600" />
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                              className="bg-gray-200 rounded-full p-2 ms-2 hover:bg-gray-300 transition duration-200"
+                              onClick={() => increaseQuantity(item._id)}
+                            >
+                              <FaPlus className="text-gray-600" />
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          <button
+                            className="bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200 py-1 px-1 text-md"
+                            onClick={() => removeFromCart(item._id)}
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
-              <button
-                className="btn btn-primary mt-4"
-                onClick={() => navigate("/checkout")}
-              >
-                Proceed to Checkout
-              </button>
-            </div>
-          </>
-        ) : (
-          <p className="text-center">Your cart is empty.</p>
-        )}
+
+              {/* Order Summary Section */}
+              <div className="border border-gray-300 rounded-lg p-6 shadow-lg bg-white mb-8">
+                <h4 className="text-2xl font-bold text-center mb-4">
+                  Order Summary
+                </h4>
+                <div className="flex justify-between py-2 border-b border-gray-300">
+                  <span className="font-semibold">Subtotal:</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-gray-300">
+                  <span className="font-semibold">Delivery Fee:</span>
+                  <span>${deliveryFee.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between py-2 font-bold text-lg">
+                  <span>Total:</span>
+                  <span>${totalPrice.toFixed(2)}</span>
+                </div>
+                <div className="text-center mt-4">
+                  <button
+                    className="bg-blue-600 text-white rounded-md mt-4 py-2 px-6 hover:bg-blue-700 transition duration-200"
+                    onClick={() => navigate("/checkout")}
+                  >
+                    Proceed to Checkout
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="text-center text-lg text-gray-600">
+              Your cart is empty.
+            </p>
+          )}
+        </div>
       </div>
     </>
   );

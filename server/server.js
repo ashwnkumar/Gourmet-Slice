@@ -161,7 +161,7 @@ app.get("/api/products", async (req, res) => {
 
 // Order creation
 app.post("/api/orders", verifyToken, async (req, res) => {
-  const { items, address, paymentMethod, total } = req.body;
+  const { items, address, paymentMethod, total, status } = req.body;
 
   // Validate incoming data
   if (!items || !Array.isArray(items) || items.length === 0) {
@@ -186,6 +186,7 @@ app.post("/api/orders", verifyToken, async (req, res) => {
       address,
       paymentMethod,
       total,
+      status,
     });
 
     const savedOrder = await newOrder.save();

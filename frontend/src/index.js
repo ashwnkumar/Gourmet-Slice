@@ -15,6 +15,8 @@ import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 import MyOrders from "./components/MyOrders";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./styles/tailwind.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
