@@ -6,7 +6,10 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    match: /@admins\.gourmetslice\.in$/, // Ensure the email matches the domain
+    match: [
+      /^.+@admins\.gourmetslice\.in$/,
+      "Please fill a valid email address",
+    ],
   },
   password: {
     type: String,
@@ -21,6 +24,10 @@ adminSchema.pre("save", async function (next) {
   }
   next();
 });
+
+adminSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 // Create the Admin model
 const Admin = mongoose.model("Admin", adminSchema);

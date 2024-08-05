@@ -1,4 +1,3 @@
-// index.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ReactDOM from "react-dom/client";
@@ -15,19 +14,21 @@ import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 import MyOrders from "./components/MyOrders";
+import AdminSignUp from "./admin/AdminSignUp";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/tailwind.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <CartProvider>
-      <AuthProvider>
-        <Router>
+    <Router>
+      <CartProvider>
+        <AuthProvider>
           <Routes>
             <Route path="/" element={<App />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/admin-sign-up" element={<AdminSignUp />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/order-food" element={<OrderFood />} />
@@ -36,8 +37,8 @@ root.render(
             <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="/my-orders" element={<MyOrders />} />
           </Routes>
-        </Router>
-      </AuthProvider>
-    </CartProvider>
+        </AuthProvider>
+      </CartProvider>
+    </Router>
   </React.StrictMode>
 );

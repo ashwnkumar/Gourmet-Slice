@@ -60,7 +60,7 @@ const OrderFood = () => {
     setShowToast(true);
     setTimeout(() => {
       setShowToast(false);
-    }, 3000); // Toast visible for 3 seconds
+    }, 3000);
   };
 
   const filteredItems = foodItems.filter((item) => {
@@ -82,7 +82,6 @@ const OrderFood = () => {
     });
   };
 
-  // Close the dropdown when clicking outside
   const handleClickOutside = useCallback((event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsDropdownOpen(false);

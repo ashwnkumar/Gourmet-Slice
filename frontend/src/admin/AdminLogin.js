@@ -20,8 +20,17 @@ function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting admin login with data:", formData);
+    if (!formData.email.endsWith("@admins.gourmetslice.in")) {
+      setMessage(
+        "Only @admins.gourmetslice.in email addresses are allowed for admin users."
+      );
+      return;
+    }
     try {
-      const res = await axios.post("http://localhost:5000/login", formData);
+      const res = await axios.post(
+        "http://localhost:5000/admin-login",
+        formData
+      );
       setMessage(res.data.msg);
       const token = res.data.token;
       console.log("Token received:", token);

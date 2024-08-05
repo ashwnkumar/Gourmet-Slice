@@ -43,6 +43,32 @@ app.post("/sign-up", async (req, res) => {
   }
 });
 
+// Admin sign-up route
+app.post("/admin-sign-up", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if the email is in the correct format
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@admins\.gourmetslice\.in$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ msg: "Invalid email format for admin" });
+  }
+
+  try {
+    // Check if admin exists
+    let admin = await Admin.findOne({ email });
+    if (admin) {
+      return res.status(400).json({ msg: "Admin already exists" });
+    }
+
+    // Create new admin
+    admin = new Admin({ email, password });
+    await admin.save();
+    res.status(201).json({ msg: "Admin registered successfully" });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
 // Login route for user
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -86,12 +112,14 @@ app.post("/admin-login", async (req, res) => {
     // Find the admin by email
     const admin = await Admin.findOne({ email });
     if (!admin) {
+      console.log("Admin not found");
       return res.status(401).json({ msg: "Invalid credentials" });
     }
 
-    // Compare the password (assuming it's hashed)
+    // Compare the password
     const isMatch = await admin.comparePassword(password);
     if (!isMatch) {
+      console.log("Invalid password");
       return res.status(401).json({ msg: "Invalid credentials" });
     }
 
@@ -106,6 +134,7 @@ app.post("/admin-login", async (req, res) => {
 
     res.status(200).json({ msg: "Login successful", token });
   } catch (err) {
+    console.error("Server error:", err);
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 });

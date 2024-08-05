@@ -19,6 +19,12 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email.endsWith("@gmail.com")) {
+      setMessage(
+        "Only @gmail.com email addresses are allowed for regular users."
+      );
+      return;
+    }
     try {
       const res = await axios.post("http://localhost:5000/login", formData);
       setMessage(res.data.msg);

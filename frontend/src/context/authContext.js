@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useCart } from "./cartContext";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -8,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { resetCart } = useCart();
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -39,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     resetCart();
     setUser(null);
+    navigate("/");
   };
 
   return (
