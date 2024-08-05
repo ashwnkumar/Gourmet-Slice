@@ -11,7 +11,7 @@ function AdminLogin() {
   });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext); // Get token from AuthContext
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,7 +34,7 @@ function AdminLogin() {
       setMessage(res.data.msg);
       const token = res.data.token;
       console.log("Token received:", token);
-      login(token);
+      login(token); // Set the token in AuthContext
 
       if (formData.email.endsWith("@admins.gourmetslice.in")) {
         navigate("/admin");

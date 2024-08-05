@@ -20,6 +20,10 @@ const productSchema = new mongoose.Schema(
       required: true,
       enum: ["Veg", "Non-Veg", "Beverage"],
     },
+    image: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

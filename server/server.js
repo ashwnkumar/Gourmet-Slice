@@ -8,6 +8,7 @@ const Order = require("./models/Orders");
 const Product = require("./models/Product");
 const verifyToken = require("./authMiddleware");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
 require("dotenv").config();
 
 const app = express();
@@ -20,8 +21,24 @@ mongoose
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
+//Middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
 
 // Sign up to register the user
 app.post("/sign-up", async (req, res) => {
@@ -139,16 +156,17 @@ app.post("/admin-login", async (req, res) => {
   }
 });
 
-// Route for adding products
-app.post("/api/products", async (req, res) => {
+// Route for adding products with image upload
+app.post("/api/products", upload.single("image"), async (req, res) => {
   const { name, description, price, category } = req.body;
+  const image = req.file.path; // Get the path of the uploaded image
 
   // Basic validation
-  if (!name || !description || !price || !category) {
+  if (!name || !description || !price || !category || !image) {
     return res.status(400).json({ msg: "All fields are required." });
   }
 
-  const newProduct = new Product({ name, description, price, category });
+  const newProduct = new Product({ name, description, price, category, image });
 
   try {
     await newProduct.save();
@@ -223,6 +241,40 @@ app.post("/api/orders", verifyToken, async (req, res) => {
   } catch (error) {
     console.error("Error creating order:", error);
     res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// Update product
+app.put("/api/products/:id", upload.single("image"), async (req, res) => {
+  try {
+    const { name, description, price, category } = req.body;
+    const updatedData = { name, description, price, category };
+
+    // Check if an image file was uploaded
+    if (req.file) {
+      updatedData.image = req.file.path; // Update the image path if a new file is uploaded
+    }
+
+    // Find the product by ID and update it
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      { new: true, runValidators: true } // Add runValidators to ensure validation is enforced
+    );
+
+    // Check if the product was found and updated
+    if (!updatedProduct) {
+      return res.status(404).json({ msg: "Product not found" });
+    }
+
+    res
+      .status(200)
+      .json({ msg: "Product updated successfully!", product: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ msg: "Error adding/updating product: " + error.message });
   }
 });
 

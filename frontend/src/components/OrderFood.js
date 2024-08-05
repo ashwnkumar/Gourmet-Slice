@@ -9,6 +9,9 @@ import {
   FaShoppingCart,
   FaUtensils,
   FaFilter,
+  FaLeaf, // Veg icon
+  FaDrumstickBite, // Non-Veg icon
+  FaCoffee, // Beverage icon
 } from "react-icons/fa";
 
 const OrderFood = () => {
@@ -153,11 +156,18 @@ const OrderFood = () => {
                       key={item._id}
                     >
                       <img
-                        src={item.image}
+                        src={`http://localhost:5000/${item.image}`} // Updated line for image source
                         alt={item.name}
                         className="w-full h-48 object-cover rounded-md mb-4 border border-gray-300"
                       />
-                      <h5 className="text-xl font-semibold text-gray-800 hover:text-blue-600 transition duration-200">
+                      <h5 className="text-xl font-semibold text-gray-800 hover:text-blue-600 transition duration-200 flex items-center">
+                        {item.category === "Veg" ? (
+                          <FaLeaf className="mr-2 text-green-500" />
+                        ) : item.category === "Non-Veg" ? (
+                          <FaDrumstickBite className="mr-2 text-red-500" />
+                        ) : item.category === "Beverage" ? (
+                          <FaCoffee className="mr-2 text-brown-500" />
+                        ) : null}
                         {item.name}
                       </h5>
                       <p className="text-gray-600 mb-2">{item.description}</p>
