@@ -9,6 +9,7 @@ const Product = require("./models/Product");
 const verifyToken = require("./authMiddleware");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -21,12 +22,13 @@ mongoose
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
-//Middleware
+// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads"));
+//app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -54,7 +56,17 @@ app.post("/sign-up", async (req, res) => {
     // Create new user
     user = new User({ name, email, password });
     await user.save();
-    res.status(201).json({ msg: "User registered successfully" });
+
+    // Create JWT token without profile image
+    const token = jwt.sign(
+      { id: user._id, email: user.email, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res
+      .status(201)
+      .json({ msg: "User registered successfully", token, name: user.name });
   } catch (err) {
     res.status(500).send("Server error");
   }
@@ -80,7 +92,15 @@ app.post("/admin-sign-up", async (req, res) => {
     // Create new admin
     admin = new Admin({ email, password });
     await admin.save();
-    res.status(201).json({ msg: "Admin registered successfully" });
+
+    // Create JWT token
+    const token = jwt.sign(
+      { id: admin._id, email: admin.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.status(201).json({ msg: "Admin registered successfully", token });
   } catch (err) {
     res.status(500).send("Server error");
   }
@@ -101,17 +121,63 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
+    // Create JWT token without profile image
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, name: user.name },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.status(200).json({ msg: "Login successful", token });
+    res.status(200).json({ msg: "Login successful", token, name: user.name });
   } catch (err) {
     res.status(500).send("Server error");
   }
 });
+
+// Your existing route for profile image upload
+app.put(
+  "/api/user/profile-image",
+  verifyToken,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const imagePath = req.file.path;
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { image: imagePath },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+
+      const token = jwt.sign(
+        {
+          id: updatedUser._id,
+          email: updatedUser.email,
+          name: updatedUser.name,
+          profileImage: updatedUser.image,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+      );
+
+      res.status(200).json({
+        msg: "Profile image updated successfully",
+        image: imagePath,
+        token,
+      });
+    } catch (error) {
+      console.error("Error updating profile image:", error);
+      res
+        .status(500)
+        .json({ msg: "Error updating profile image", error: error.message });
+    }
+  }
+);
 
 // Admin login route
 app.post("/admin-login", async (req, res) => {
@@ -173,6 +239,29 @@ app.post("/api/products", upload.single("image"), async (req, res) => {
     res.status(201).json({ msg: "Product added successfully!" });
   } catch (err) {
     res.status(500).json({ msg: "Error adding product", error: err.message });
+  }
+});
+
+//Profile image
+app.get("/:userId/profile-image", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).select("image");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.image) {
+      return res.status(404).json({ message: "Profile image not found" });
+    }
+
+    // Normalize the image path for the URL
+    const imagePath = user.image.replace(/\\/g, "/"); // Replace backslashes with forward slashes
+
+    res.json({ image: imagePath });
+  } catch (error) {
+    console.error("Error fetching profile image:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
