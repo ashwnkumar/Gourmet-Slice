@@ -60,6 +60,7 @@ const NavigationBar = () => {
         <div className="text-white text-3xl font-bold transition-transform transform hover:scale-105">
           <Link to="/">Gourmet Slice</Link>
         </div>
+
         <ul className="hidden md:flex space-x-8">
           <li>
             <Link
