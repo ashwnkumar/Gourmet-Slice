@@ -28,8 +28,8 @@ app.use(bodyParser.json());
 // Allow requests from your frontend
 app.use(
   cors({
-    origin: "https://gourmet-slice-api.vercel.app/", 
-    methods: ["GET", "POST", "PUT", "DELETE"], // Specify the methods you want to allow
+    origin: "https://gourmet-slice-frontend.vercel.app", 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
   })
 );
 
@@ -84,7 +84,7 @@ app.post("/sign-up", async (req, res) => {
 app.post("/admin-sign-up", async (req, res) => {
   const { email, password } = req.body;
 
-  // Check if the email is in the correct format
+
   const emailRegex = /^[a-zA-Z0-9._%+-]+@admins\.gourmetslice\.in$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ msg: "Invalid email format for admin" });
