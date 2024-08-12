@@ -14,7 +14,7 @@ import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 import MyOrders from "./components/MyOrders";
-import AdminSignUp from "./admin/AdminSignUp";
+import AdminSignUp from "./admin/AdminSignup";
 import Profile from "./components/Profile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/tailwind.css";
