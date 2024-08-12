@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom"; // Import Link
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa"; // Import icons
+import { useNavigate, Link } from "react-router-dom";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
 function SignUp() {
   const [formData, setFormData] = useState({

@@ -4,7 +4,7 @@ import { useAuth } from "../context/authContext";
 import NavigationBar from "./Navbar";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
-import { FaCreditCard, FaMoneyBillWave } from "react-icons/fa"; // Importing payment icons
+import { FaCreditCard, FaMoneyBillWave } from "react-icons/fa";
 
 const Checkout = () => {
   const { cart, resetCart } = useCart();

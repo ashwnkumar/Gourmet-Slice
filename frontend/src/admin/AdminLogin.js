@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { FaUser, FaLock } from "react-icons/fa"; // Import icons
+import { FaUser, FaLock } from "react-icons/fa";
 
 function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ function AdminLogin() {
   });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Get token from AuthContext
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
