@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa"; // Import icons
 
-const AdminSignUp = () => {
+const AdminSignup = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -98,4 +98,4 @@ const AdminSignUp = () => {
   );
 };
 
-export default AdminSignUp;
+export default AdminSignup;

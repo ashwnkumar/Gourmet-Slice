@@ -24,7 +24,15 @@ mongoose
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+
+// Allow requests from your frontend
+app.use(
+  cors({
+    origin: "", // Update this to your frontend's URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify the methods you want to allow
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //app.use("/uploads", express.static("uploads"));

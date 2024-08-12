@@ -14,7 +14,7 @@ import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 import MyOrders from "./components/MyOrders";
-import AdminSignUp from "./admin/AdminSignup";
+import AdminSignup from "./admin/AdminSignup";
 import Profile from "./components/Profile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/tailwind.css";
@@ -29,7 +29,7 @@ root.render(
             <Route path="/" element={<App />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin-sign-up" element={<AdminSignUp />} />
+            <Route path="/admin-sign-up" element={<AdminSignup />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/order-food" element={<OrderFood />} />
