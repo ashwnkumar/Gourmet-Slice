@@ -28,7 +28,7 @@ function AdminLogin() {
     }
     try {
       const res = await axios.post(
-        "http://localhost:5000/admin-login",
+        "https://gourmet-slice-api.vercel.app/admin-login",
         formData
       );
       setMessage(res.data.msg);

@@ -19,7 +19,10 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/sign-up", formData);
+      const res = await axios.post(
+        "https://gourmet-slice-api.vercel.app/sign-up",
+        formData
+      );
       setMessage(res.data.msg);
       if (res.status === 201) {
         navigate("/login");
