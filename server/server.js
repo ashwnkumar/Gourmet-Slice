@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 // Allow requests from your frontend
 app.use(
   cors({
-    origin: "", // Update this to your frontend's URL
+    origin: "https://gourmet-slice-api.vercel.app/", 
     methods: ["GET", "POST", "PUT", "DELETE"], // Specify the methods you want to allow
   })
 );
