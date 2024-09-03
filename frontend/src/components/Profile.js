@@ -30,7 +30,7 @@ const Profile = () => {
 
     try {
       const response = await fetch(
-        "https://gourmet-slice-api.vercel.app/api/user/profile-image",
+        "http://localhost:5000/api/user/profile-image",
         {
           method: "PUT",
           body: formData,
@@ -70,7 +70,7 @@ const Profile = () => {
 
   const imageUrl = image.startsWith("http")
     ? image
-    : `https://gourmet-slice-api.vercel.app/${image.replace(/\\/g, "/")}`;
+    : `http://localhost:5000/${image.replace(/\\/g, "/")}`;
 
   return (
     <div className="container mx-auto p-6">

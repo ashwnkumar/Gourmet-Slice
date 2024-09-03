@@ -45,9 +45,7 @@ const Admin = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(
-        "https://gourmet-slice-api.vercel.app/api/products"
-      );
+      const response = await axios.get("http://localhost:5000/api/products");
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -59,14 +57,11 @@ const Admin = () => {
     if (!token) return;
 
     try {
-      const usersResponse = await axios.get(
-        "https://gourmet-slice-api.vercel.app/api/users",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const usersResponse = await axios.get("http://localhost:5000/api/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const ordersResponse = await axios.get(
-        "https://gourmet-slice-api.vercel.app/api/orders/all",
+        "http://localhost:5000/api/orders/all",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -106,8 +101,8 @@ const Admin = () => {
 
     try {
       const url = editingProductId
-        ? `https://gourmet-slice-api.vercel.app/api/products/${editingProductId}`
-        : "https://gourmet-slice-api.vercel.app/api/products";
+        ? `http://localhost:5000/api/products/${editingProductId}`
+        : "http://localhost:5000/api/products";
 
       const method = editingProductId ? "put" : "post";
 
@@ -148,9 +143,7 @@ const Admin = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(
-          `https://gourmet-slice-api.vercel.app/api/products/${id}`
-        );
+        await axios.delete(`http://localhost:5000/api/products/${id}`);
         setMessage("Product deleted successfully!");
         fetchProducts();
       } catch (err) {
@@ -310,7 +303,7 @@ const Admin = () => {
                     <p>${product.price}</p>
                     {product.image && (
                       <img
-                        src={`https://gourmet-slice-api.vercel.app/${product.image}`}
+                        src={`http://localhost:5000/${product.image}`}
                         alt={product.name}
                         className="mt-2 h-24 w-24 object-cover"
                       />

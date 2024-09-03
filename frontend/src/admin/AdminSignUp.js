@@ -19,7 +19,7 @@ const AdminSignup = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://gourmet-slice-api.vercel.app/admin-sign-up",
+        "http://localhost:5000/admin-sign-up",
         formData
       );
       setMessage(res.data.msg);
