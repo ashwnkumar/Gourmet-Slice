@@ -27,6 +27,8 @@ const Admin = () => {
   });
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState("All");
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [orders, setOrders] = useState([]);
@@ -42,6 +44,17 @@ const Admin = () => {
       fetchUsersAndOrders();
     }
   }, [navigate]);
+
+  useEffect(() => {
+    // Filter products based on selected category
+    if (categoryFilter === "All") {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(
+        products.filter((product) => product.category === categoryFilter)
+      );
+    }
+  }, [products, categoryFilter]);
 
   const fetchProducts = async () => {
     try {
@@ -158,16 +171,22 @@ const Admin = () => {
 
   return (
     <div className="container mx-auto mt-10 px-4">
-      <h2 className="text-3xl font-bold text-center mb-8 flex items-center justify-center">
-        <FaUserShield className="mr-2" /> Admin Dashboard
-      </h2>
+      <div className="flex flex-col items-center justify-center my-10">
+        <h2 className="text-3xl font-bold text-center flex items-center mb-3 justify-center">
+          <FaUserShield className="mr-2" /> Admin Dashboard
+        </h2>
+        <Link to="/">
+          <button className=" bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 flex items-center justify-center">
+            Go To Home
+          </button>
+        </Link>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <form
           onSubmit={handleSubmit}
           className="p-4 bg-white shadow-md rounded-md"
         >
           <h3 className="text-2xl font-bold mb-4 flex items-center">
-            <FaProductHunt className="mr-2" />
             {editingProductId ? "Edit Product" : "Add Product"}
           </h3>
           <div className="mb-4">
@@ -265,7 +284,6 @@ const Admin = () => {
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 flex items-center justify-center"
           >
-            <FaProductHunt className="mr-2" />{" "}
             {editingProductId ? "Update Product" : "Add Product"}
           </button>
           {message && (
@@ -279,9 +297,28 @@ const Admin = () => {
           <h3 className="text-2xl font-bold mb-4 flex items-center">
             <FaListUl className="mr-2" /> Product List
           </h3>
-          {products.length > 0 ? (
+          <div className="mb-4">
+            <label
+              htmlFor="categoryFilter"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Filter by Category
+            </label>
+            <select
+              id="categoryFilter"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+            >
+              <option value="All">All</option>
+              <option value="Veg">Veg</option>
+              <option value="Non-Veg">Non-Veg</option>
+              <option value="Beverage">Beverage</option>
+            </select>
+          </div>
+          {filteredProducts.length > 0 ? (
             <ul className="space-y-4">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <li
                   key={product._id}
                   className="p-4 bg-gray-100 rounded-md flex justify-between items-center"
@@ -373,20 +410,20 @@ const Admin = () => {
         ))
       )}
 
-      <div className="text-center mt-6">
+      <div className="flex flex-col items-center justify-center py-10">
         <Link to="/order-food">
           <button className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700">
             Go to Order Food Page
           </button>
         </Link>
-      </div>
 
-      <button
-        onClick={handleLogout}
-        className="mt-8 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700 flex items-center justify-center"
-      >
-        <FaSignOutAlt className="mr-2" /> Sign Out
-      </button>
+        <button
+          onClick={handleLogout}
+          className="mt-8 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700 flex items-center justify-center"
+        >
+          <FaSignOutAlt className="mr-2" /> Sign Out
+        </button>
+      </div>
     </div>
   );
 };
